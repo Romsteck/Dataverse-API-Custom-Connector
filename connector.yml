@@ -1,0 +1,655 @@
+swagger: '2.0'
+info:
+  title: Dataverse API
+  version: '1.0'
+host: '@environmentVariables("Environment_URL")'
+basePath: /api/data/v9.2
+schemes:
+  - https
+securityDefinitions:
+  oauth2-auth:
+    type: oauth2
+    flow: accessCode
+    tokenUrl: https://login.windows.net/common/oauth2/authorize
+    scopes:
+      user_impersonation: user_impersonation
+    authorizationUrl: https://login.microsoftonline.com/common/oauth2/authorize
+security:
+  - oauth2-auth:
+      - user_impersonation
+paths:
+  /{tableName}:
+    get:
+      summary: Get Rows (value array only)
+      description: >-
+        Get only the value array from any Dataverse table with dynamic OData
+        parameters. All fields accept null/absent values.
+      operationId: GetRows
+      parameters:
+        - name: tableName
+          in: path
+          required: true
+          type: string
+          description: Dataverse table logical name.
+        - name: $filter
+          in: query
+          required: false
+          type: string
+          description: OData filter expression.
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+        - name: $expand
+          in: query
+          required: false
+          type: string
+          description: OData expand clause.
+        - name: Prefer
+          in: header
+          required: false
+          type: string
+          default: >-
+            odata.include-annotations="OData.Community.Display.V1.FormattedValue"
+          description: Dataverse Prefer header for annotation formatting.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+    post:
+      summary: Create Row
+      description: Create a new row in any Dataverse table.
+      operationId: CreateRow
+      parameters:
+        - name: tableName
+          in: path
+          required: true
+          type: string
+          description: Dataverse table logical name.
+        - name: Prefer
+          in: header
+          required: false
+          type: string
+          default: return=representation
+          description: Set to return=representation to get the created row in response.
+        - name: body
+          in: body
+          required: false
+          schema:
+            type: object
+            properties: {}
+      responses:
+        '201':
+          description: Row created and returned
+          schema:
+            type: object
+            properties: {}
+  /GlobalOptionSetDefinitions(Name='{name}'):
+    get:
+      summary: Get Option Set
+      description: Get Option Set By Name
+      operationId: GetOptionSet
+      parameters:
+        - name: name
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: default
+          schema:
+            type: object
+            properties:
+              '@odata.context':
+                type: string
+                description: '@odata.context'
+              '@odata.type':
+                type: string
+                description: '@odata.type'
+              MetadataId:
+                type: string
+                description: MetadataId
+              HasChanged:
+                type: string
+                description: HasChanged
+              IsCustomOptionSet:
+                type: boolean
+                description: IsCustomOptionSet
+              IsGlobal:
+                type: boolean
+                description: IsGlobal
+              IsManaged:
+                type: boolean
+                description: IsManaged
+              Name:
+                type: string
+                description: Name
+              ExternalTypeName:
+                type: string
+                description: ExternalTypeName
+              OptionSetType:
+                type: string
+                description: OptionSetType
+              IntroducedVersion:
+                type: string
+                description: IntroducedVersion
+              ParentOptionSetName:
+                type: string
+                description: ParentOptionSetName
+              Description:
+                type: object
+                properties:
+                  LocalizedLabels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Label:
+                          type: string
+                          description: Label
+                        LanguageCode:
+                          type: integer
+                          format: int32
+                          description: LanguageCode
+                        IsManaged:
+                          type: boolean
+                          description: IsManaged
+                        MetadataId:
+                          type: string
+                          description: MetadataId
+                        HasChanged:
+                          type: string
+                          description: HasChanged
+                    description: LocalizedLabels
+                  UserLocalizedLabel:
+                    type: object
+                    properties:
+                      Label:
+                        type: string
+                        description: Label
+                      LanguageCode:
+                        type: integer
+                        format: int32
+                        description: LanguageCode
+                      IsManaged:
+                        type: boolean
+                        description: IsManaged
+                      MetadataId:
+                        type: string
+                        description: MetadataId
+                      HasChanged:
+                        type: string
+                        description: HasChanged
+                    description: UserLocalizedLabel
+                description: Description
+              DisplayName:
+                type: object
+                properties:
+                  LocalizedLabels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Label:
+                          type: string
+                          description: Label
+                        LanguageCode:
+                          type: integer
+                          format: int32
+                          description: LanguageCode
+                        IsManaged:
+                          type: boolean
+                          description: IsManaged
+                        MetadataId:
+                          type: string
+                          description: MetadataId
+                        HasChanged:
+                          type: string
+                          description: HasChanged
+                    description: LocalizedLabels
+                  UserLocalizedLabel:
+                    type: object
+                    properties:
+                      Label:
+                        type: string
+                        description: Label
+                      LanguageCode:
+                        type: integer
+                        format: int32
+                        description: LanguageCode
+                      IsManaged:
+                        type: boolean
+                        description: IsManaged
+                      MetadataId:
+                        type: string
+                        description: MetadataId
+                      HasChanged:
+                        type: string
+                        description: HasChanged
+                    description: UserLocalizedLabel
+                description: DisplayName
+              IsCustomizable:
+                type: object
+                properties:
+                  Value:
+                    type: boolean
+                    description: Value
+                  CanBeChanged:
+                    type: boolean
+                    description: CanBeChanged
+                  ManagedPropertyLogicalName:
+                    type: string
+                    description: ManagedPropertyLogicalName
+                description: IsCustomizable
+              Options:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Value:
+                      type: integer
+                      format: int32
+                      description: Value
+                    Color:
+                      type: string
+                      description: Color
+                    IsManaged:
+                      type: boolean
+                      description: IsManaged
+                    ExternalValue:
+                      type: string
+                      description: ExternalValue
+                    ParentValues:
+                      type: array
+                      items: {}
+                      description: ParentValues
+                    Tag:
+                      type: string
+                      description: Tag
+                    IsHidden:
+                      type: boolean
+                      description: IsHidden
+                    MetadataId:
+                      type: string
+                      description: MetadataId
+                    HasChanged:
+                      type: string
+                      description: HasChanged
+                    Label:
+                      type: object
+                      properties:
+                        LocalizedLabels:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              Label:
+                                type: string
+                                description: Label
+                              LanguageCode:
+                                type: integer
+                                format: int32
+                                description: LanguageCode
+                              IsManaged:
+                                type: boolean
+                                description: IsManaged
+                              MetadataId:
+                                type: string
+                                description: MetadataId
+                              HasChanged:
+                                type: string
+                                description: HasChanged
+                          description: LocalizedLabels
+                        UserLocalizedLabel:
+                          type: object
+                          properties:
+                            Label:
+                              type: string
+                              description: Label
+                            LanguageCode:
+                              type: integer
+                              format: int32
+                              description: LanguageCode
+                            IsManaged:
+                              type: boolean
+                              description: IsManaged
+                            MetadataId:
+                              type: string
+                              description: MetadataId
+                            HasChanged:
+                              type: string
+                              description: HasChanged
+                          description: UserLocalizedLabel
+                      description: Label
+                    Description:
+                      type: object
+                      properties:
+                        LocalizedLabels:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              Label:
+                                type: string
+                                description: Label
+                              LanguageCode:
+                                type: integer
+                                format: int32
+                                description: LanguageCode
+                              IsManaged:
+                                type: boolean
+                                description: IsManaged
+                              MetadataId:
+                                type: string
+                                description: MetadataId
+                              HasChanged:
+                                type: string
+                                description: HasChanged
+                          description: LocalizedLabels
+                        UserLocalizedLabel:
+                          type: object
+                          properties:
+                            Label:
+                              type: string
+                              description: Label
+                            LanguageCode:
+                              type: integer
+                              format: int32
+                              description: LanguageCode
+                            IsManaged:
+                              type: boolean
+                              description: IsManaged
+                            MetadataId:
+                              type: string
+                              description: MetadataId
+                            HasChanged:
+                              type: string
+                              description: HasChanged
+                          description: UserLocalizedLabel
+                      description: Description
+                description: Options
+  /{table_name}({row_id}):
+    delete:
+      summary: Delete Row by ID
+      description: Delete Row using GUID
+      operationId: DeleteRowbyID
+      parameters:
+        - name: table_name
+          in: path
+          required: true
+          type: string
+        - name: row_id
+          in: path
+          required: true
+          type: string
+      responses:
+        default:
+          description: default
+          schema: {}
+    patch:
+      summary: Update Row by ID
+      description: Update Row using GUID
+      operationId: UpdateRowbyID
+      parameters:
+        - name: table_name
+          in: path
+          required: true
+          type: string
+        - name: row_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: false
+          schema:
+            type: object
+            properties: {}
+      responses:
+        default:
+          description: default
+          schema: {}
+  /{table_name}({row_id})/{navigation_property}/$ref:
+    post:
+      summary: Relate Rows
+      description: >-
+        Create a relationship between two rows using a navigation property. The
+        request body must contain an '@odata.id' pointing to the related row.
+      operationId: RelateRows
+      parameters:
+        - name: table_name
+          in: path
+          required: true
+          type: string
+          description: Primary table logical name.
+        - name: row_id
+          in: path
+          required: true
+          type: string
+          description: Primary row GUID.
+        - name: navigation_property
+          in: path
+          required: true
+          type: string
+          description: Relationship navigation property name.
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties: {}
+      responses:
+        default:
+          description: default
+          schema: {}
+  /:
+    get:
+      summary: List Tables
+      description: List all tables from the environment
+      operationId: ListTables
+      responses:
+        '200':
+          description: List of available tables
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Table logical name
+                kind:
+                  type: string
+                  description: Entity kind
+                url:
+                  type: string
+                  description: Relative URL
+  /solutions:
+    get:
+      summary: Get Solutions
+      description: Get all solutions from the environment.
+      operationId: GetSolutions
+      parameters:
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+        - name: $filter
+          in: query
+          required: false
+          type: string
+          description: OData filter expression.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /solutioncomponents:
+    get:
+      summary: Get Solution Components
+      description: Get solution components with optional OData query parameters.
+      operationId: GetSolutionComponents
+      parameters:
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+        - name: $filter
+          in: query
+          required: false
+          type: string
+          description: OData filter expression.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /EntityDefinitions:
+    get:
+      summary: Get Entity Definitions
+      description: Get all entity definitions with optional OData query parameters.
+      operationId: GetEntityDefinitions
+      parameters:
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+        - name: $filter
+          in: query
+          required: false
+          type: string
+          description: OData filter expression.
+        - name: $expand
+          in: query
+          required: false
+          type: string
+          description: OData expand clause.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /EntityDefinitions(LogicalName='{logicalName}'):
+    get:
+      summary: Get Entity Definition
+      description: Get a single entity definition by its logical name.
+      operationId: GetEntityDefinition
+      parameters:
+        - name: logicalName
+          in: path
+          required: true
+          type: string
+          description: Entity logical name.
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /EntityDefinitions(LogicalName='{logicalName}')/Attributes:
+    get:
+      summary: Get Entity Attributes
+      description: Get all attributes (columns) for a specific entity.
+      operationId: GetEntityAttributes
+      parameters:
+        - name: logicalName
+          in: path
+          required: true
+          type: string
+          description: Entity logical name.
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+        - name: $filter
+          in: query
+          required: false
+          type: string
+          description: OData filter expression.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /EntityDefinitions(LogicalName='{logicalName}')/OneToManyRelationships:
+    get:
+      summary: Get One To Many Relationships
+      description: Get one-to-many relationships for a specific entity.
+      operationId: GetOneToManyRelationships
+      parameters:
+        - name: logicalName
+          in: path
+          required: true
+          type: string
+          description: Entity logical name.
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /EntityDefinitions(LogicalName='{logicalName}')/ManyToOneRelationships:
+    get:
+      summary: Get Many To One Relationships
+      description: Get many-to-one relationships for a specific entity.
+      operationId: GetManyToOneRelationships
+      parameters:
+        - name: logicalName
+          in: path
+          required: true
+          type: string
+          description: Entity logical name.
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
+  /EntityDefinitions(LogicalName='{logicalName}')/ManyToManyRelationships:
+    get:
+      summary: Get Many To Many Relationships
+      description: Get many-to-many relationships for a specific entity.
+      operationId: GetManyToManyRelationships
+      parameters:
+        - name: logicalName
+          in: path
+          required: true
+          type: string
+          description: Entity logical name.
+        - name: $select
+          in: query
+          required: false
+          type: string
+          description: OData select clause.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties: {}
