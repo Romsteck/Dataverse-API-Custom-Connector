@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Dataverse API
   version: '1.0'
-host: '@environmentVariables("Environment_URL")'
+host: '@environmentVariables("ibookdev_Environment_URL")'
 basePath: /api/data/v9.2
 schemes:
   - https
@@ -18,19 +18,17 @@ security:
   - oauth2-auth:
       - user_impersonation
 paths:
-  /{tableName}:
+  "/{entitySetName}":
     get:
       summary: Get Rows (value array only)
-      description: >-
-        Get only the value array from any Dataverse table with dynamic OData
-        parameters. All fields accept null/absent values.
+      description: Get only the value array from any Dataverse table with dynamic OData parameters. All fields accept null/absent values.
       operationId: GetRows
       parameters:
-        - name: tableName
+        - name: entitySetName
           in: path
           required: true
           type: string
-          description: Dataverse table logical name.
+          description: Dataverse entity set name (e.g. accounts, contacts).
         - name: $filter
           in: query
           required: false
@@ -46,13 +44,6 @@ paths:
           required: false
           type: string
           description: OData expand clause.
-        - name: Prefer
-          in: header
-          required: false
-          type: string
-          default: >-
-            odata.include-annotations="OData.Community.Display.V1.FormattedValue"
-          description: Dataverse Prefer header for annotation formatting.
       responses:
         '200':
           description: Successful response
@@ -64,11 +55,11 @@ paths:
       description: Create a new row in any Dataverse table.
       operationId: CreateRow
       parameters:
-        - name: tableName
+        - name: entitySetName
           in: path
           required: true
           type: string
-          description: Dataverse table logical name.
+          description: Dataverse entity set name.
         - name: Prefer
           in: header
           required: false
@@ -87,7 +78,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /GlobalOptionSetDefinitions(Name='{name}'):
+  "/GlobalOptionSetDefinitions(Name='{name}')":
     get:
       summary: Get Option Set
       description: Get Option Set By Name
@@ -371,7 +362,7 @@ paths:
                           description: UserLocalizedLabel
                       description: Description
                 description: Options
-  /{table_name}({row_id}):
+  "/{table_name}({row_id})":
     delete:
       summary: Delete Row by ID
       description: Delete Row using GUID
@@ -412,12 +403,10 @@ paths:
         default:
           description: default
           schema: {}
-  /{table_name}({row_id})/{navigation_property}/$ref:
+  "/{table_name}({row_id})/{navigation_property}/$ref":
     post:
       summary: Relate Rows
-      description: >-
-        Create a relationship between two rows using a navigation property. The
-        request body must contain an '@odata.id' pointing to the related row.
+      description: "Create a relationship between two rows using a navigation property. The request body must contain an '@odata.id' pointing to the related row."
       operationId: RelateRows
       parameters:
         - name: table_name
@@ -445,7 +434,7 @@ paths:
         default:
           description: default
           schema: {}
-  /:
+  "/":
     get:
       summary: List Tables
       description: List all tables from the environment
@@ -467,7 +456,7 @@ paths:
                 url:
                   type: string
                   description: Relative URL
-  /solutions:
+  "/solutions":
     get:
       summary: Get Solutions
       description: Get all solutions from the environment.
@@ -489,7 +478,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /solutioncomponents:
+  "/solutioncomponents":
     get:
       summary: Get Solution Components
       description: Get solution components with optional OData query parameters.
@@ -511,7 +500,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /EntityDefinitions:
+  "/EntityDefinitions":
     get:
       summary: Get Entity Definitions
       description: Get all entity definitions with optional OData query parameters.
@@ -538,7 +527,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /EntityDefinitions(LogicalName='{logicalName}'):
+  "/EntityDefinitions(LogicalName='{logicalName}')":
     get:
       summary: Get Entity Definition
       description: Get a single entity definition by its logical name.
@@ -560,7 +549,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /EntityDefinitions(LogicalName='{logicalName}')/Attributes:
+  "/EntityDefinitions(LogicalName='{logicalName}')/Attributes":
     get:
       summary: Get Entity Attributes
       description: Get all attributes (columns) for a specific entity.
@@ -587,7 +576,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /EntityDefinitions(LogicalName='{logicalName}')/OneToManyRelationships:
+  "/EntityDefinitions(LogicalName='{logicalName}')/OneToManyRelationships":
     get:
       summary: Get One To Many Relationships
       description: Get one-to-many relationships for a specific entity.
@@ -609,7 +598,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /EntityDefinitions(LogicalName='{logicalName}')/ManyToOneRelationships:
+  "/EntityDefinitions(LogicalName='{logicalName}')/ManyToOneRelationships":
     get:
       summary: Get Many To One Relationships
       description: Get many-to-one relationships for a specific entity.
@@ -631,7 +620,7 @@ paths:
           schema:
             type: object
             properties: {}
-  /EntityDefinitions(LogicalName='{logicalName}')/ManyToManyRelationships:
+  "/EntityDefinitions(LogicalName='{logicalName}')/ManyToManyRelationships":
     get:
       summary: Get Many To Many Relationships
       description: Get many-to-many relationships for a specific entity.
